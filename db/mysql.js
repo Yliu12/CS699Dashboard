@@ -1,20 +1,29 @@
+const mysql = require('mysql');
+const fs = require("fs");
 
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-  host     : 'csor12c.dhcp.bsu.edu',
-  user     : 'yliu12',
-  password : '1234',
-  database : 'cs699'
-});
- console.log ("try Connection")
-connection.connect();
-console.log ("try Connection")
 
-connection.query('select DISTINCT MR_MAC, MR_IP from mac_report2 where MR_USERNAME = "swu"', function (error, results, fields) {
-  if (error) throw error;
-  console.log ("Find Result")
+init = (callback) => {
+    //    console.log(process.cwd());
+    var line = fs.readFileSync('../db/mysql.conf');
+    var config = JSON.parse(line);
+    console.log(config.host);
 
-  console.log('The solution is: ', results);
-});
+    var connection = mysql.createConnection(config);
+
+    connection.connect(function (err) {
+        if (err) throw err;
+        console.log("Connected!");
+        connection.query("SELECT * FROM yliu12.hourly_summary1;", function (err, result) {
+            if (err) throw err;
+            console.log("Result: " + JSON.stringify(result, null, 2));
+        });
+    });
+
+    module.exports.conn = connection;
+    callback()
+};
+
 
 //connection.end();
+
+module.exports = {init};
