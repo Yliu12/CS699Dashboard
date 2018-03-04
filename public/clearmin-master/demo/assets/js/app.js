@@ -16,6 +16,14 @@ function myDashboardController($scope, $http) {
             "Toronto": false,
             "Charlotte": false
         };
+        $scope.keyValItems = {
+            'key1': 'val1',
+            'key2': 'val1',
+            'key3': 'val1',
+            'key4': 'val1',
+            'key5': 'val1',
+            'key6': 'val1'
+        };
         // $http.get('/api/initbsu')
         //     .success(function (data) {
         //         debugger;
@@ -26,18 +34,38 @@ function myDashboardController($scope, $http) {
         //         console.log('Error: ' + data);
         //     });
 
-        $scope.getBarCharData($scope.cbToList($scope.cbCities));
+        // $scope.getBarCharData($scope.cbToList($scope.cbCities));
         $scope.getHistogramData({
             "4JNXUYY8wbaaDmk3BPzlWw": "Mon Ami Gabi",
             "yQab5dxZzgBLTEHCw9V7_w": "Charlotte Douglas International Airport"
         });
 
-        $scope.getPieCharData(["Restaurants", "Chinese"], '#d1-c1', 'Chinese Restaurents', $scope.d1c1);
-        $scope.getPieCharData(["Restaurants", "Japanese"], '#d1-c3', 'Chinese Restaurents', $scope.d1c3);
-        $scope.getPieCharData(["Restaurants", "Korean"], '#d1-c2', 'Chinese Restaurents', $scope.d1c2);
-        $scope.getPieCharData(["Restaurants", "Thai"], '#d1-c01', 'Chinese Restaurents', $scope.d1c01);
+        $scope.getKVData();
+        $scope.getUDpeiDATA();
+
+
+        // $scope.getPieCharData(["Restaurants", "Chinese"], '#d1-c1', 'Chinese Restaurents', $scope.d1c1);
+
 
     };
+
+    $scope.getKVData = function () {
+        $http({
+            url: '/keyvals',
+            method: "GET"
+        }).success(function (resp) {
+            debugger;
+            console.log(resp);
+
+            $scope.keyValItems = resp;
+        }).error(function (data) {
+            debugger;
+            console.log('Error: ' + data);
+        });
+
+    };
+
+
     $scope.makeMyDonutChart = (selector, data, title) => {
         return c3.generate({
             bindto: selector,
@@ -62,10 +90,6 @@ function myDashboardController($scope, $http) {
     };
 
 
-    $scope.pullData = function () {
-        debugger;
-        $scope.getBarCharData($scope.cbToList($scope.cbCities));
-    };
 
     $scope.cbToList = function (cb) {
         var l = [];
@@ -181,5 +205,52 @@ function myDashboardController($scope, $http) {
         });
 
     };
+
+    ///http://localhost:1111
+
+    $scope.getKVData = function () {
+        $http({
+            url: '/keyvals',
+            method: "GET"
+        }).success(function (resp) {
+            debugger;
+            console.log(resp);
+
+            $scope.keyValItems = resp;
+        }).error(function (data) {
+            debugger;
+            console.log('Error: ' + data);
+        });
+
+    };
+    $scope.getUDpeiDATA = function () {
+        $http({
+            url: '/nodeviceused',
+            method: "GET"
+        }).success(function (resp) {
+            debugger;
+            console.log(resp);
+            $scope.makeMyDonutChart("#nodeviceused", resp, "Number of Device Used");
+
+            categories = [];
+            barData = [["TOTAL USER"]];
+            resp.forEach(function (value, index) {
+                categories.push(value[0]);
+                barData[0].push(value[1]);
+            });
+
+            $scope.d1c5 = $scope.makeMyBarChart('#d1-c5', 'bar', ['#1abc9c', '#3498db', '#10011', '#00011', '#20011'], true, barData, categories, {
+                x: "No Device Used",
+                y: "Number of User"
+            });
+
+
+        }).error(function (data) {
+            debugger;
+            console.log('Error: ' + data);
+        });
+
+    };
+
 //localhost:8881/countstarsincities?cites=["Cleveland","Las Vegas","Pittsburgh","Toronto","Charlotte"]
 };

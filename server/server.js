@@ -29,28 +29,77 @@ db.init(function () {
 });
 
 
-app.get("/checkinforhistogram", (req, res) => {
+app.get("/keyvals", (req, res) => {
 
 
-        db.conn.query("SELECT * FROM yliu12.hourly_summary1;", function (err, resData) {
-            if (err) {
-                res.status(400);
-                res.send(err);
-            }
-            result = [];
-            list1= ["Device"];
-            list2= ["User"];
-            result.push(list1);
-            result.push(list2);
-            resData.forEach(function(value,index){ list1.push(value.DEVICE_COUNT);
-                list2.push(value.USER_COUNT);;});
+    db.conn.query("SELECT * FROM yliu12.processed_data;", function (err, resData) {
+        if (err) {
+            res.status(500);
+            res.send(err);
+        }
+        result = {};
 
 
-            res.status(200);
-            res.send(result);
-            console.log("Result: " + JSON.stringify(result,null,2));
+        resData.forEach(function (value, index) {
+            result[value.RECORD_KEY] = value.RECORD_VALUE.toUpperCase();
+
         });
+
+
+        res.status(200);
+        res.send(result);
+        console.log("Result: " + JSON.stringify(result, null, 2));
+    });
 
 
 });
 
+app.get("/checkinforhistogram", (req, res) => {
+
+
+    db.conn.query("SELECT * FROM yliu12.hourly_summary3;", function (err, resData) {
+        if (err) {
+            res.status(400);
+            res.send(err);
+        }
+        result = [];
+        list1 = ["Device"];
+        list2 = ["User"];
+        result.push(list1);
+        result.push(list2);
+        resData.forEach(function (value, index) {
+            list1.push(value.DEVICE_COUNT);
+            list2.push(value.USER_COUNT);
+
+        });
+
+
+        res.status(200);
+        res.send(result);
+        console.log("Result: " + JSON.stringify(result, null, 2));
+    });
+
+
+});
+app.get("/nodeviceused", (req, res) => {
+
+
+    db.conn.query("select * from yliu12.NO_OF_DEVICE_USED order by USER_COUNT desc;", function (err, resData) {
+        if (err) {
+            res.status(400);
+            res.send(err);
+        }
+        result = [];
+
+        resData.forEach(function (value, index) {
+            result.push([value.DEVICE_RANGE,value.USER_COUNT]);
+        });
+
+
+        res.status(200);
+        res.send(result);
+        console.log("Result: " + JSON.stringify(result, null, 2));
+    });
+
+
+});

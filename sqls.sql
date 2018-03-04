@@ -20,7 +20,7 @@ GROUP BY MR_USERNAME
 ORDER BY magnitude DESC
 LIMIT 20;
 
-CREATE TABLE  yliu12.HOURLY_SUMMERY(
+CREATE TABLE  yliu12.HOURLY_SUMMERY2(
 USER_COUNT VARCHAR(30),
 MR_HOUR datetime,
 DEVICE_COUNT varchar(30)
@@ -142,3 +142,161 @@ GROUP BY device_range;
 
 #========================================================================
 
+#===================================EVERY THING USEFUL FROM HERE=====================================
+
+
+
+drop table yliu12.hourly_summary3;
+
+;
+commit;
+
+CREATE TABLE yliu12.HOURLY_SUMMARY3(
+	RECORD_DATETIME datetime,
+    RECORD_COUNT varchar(32),
+    DEVICE_COUNT varchar(32),
+    USER_COUNT varchar(32)
+
+);
+
+commit;
+
+SELECT * FROM yliu12.hourly_summary1;
+
+SELECT * FROM yliu12.hourly_summary3;
+
+
+INSERT INTO yliu12.HOURLY_SUMMARY3 (RECORD_DATETIME, RECORD_COUNT, DEVICE_COUNT, USER_COUNT)
+
+ SELECT '2017-10-05 0:00:00', Count(*), Count(DISTINCT mr_mac),Count(DISTINCT mr_username)
+ FROM   cs699.mac_report2
+ WHERE  mr_time >= '2017-10-05 0:00:00' AND mr_time < '2017-10-05 0:59:59'  And mr_username != "";
+
+
+
+
+
+ SELECT '2017-10-05 0:00:00', Count(*), Count(DISTINCT mr_mac),Count(DISTINCT mr_username) FROM   cs699.mac_report2 WHERE  mr_time >= '2017-10-05 0:00:00' AND mr_time < '2017-10-05 0:59:59'  And mr_username != "";
+
+ #==========================   BUILDING_SUMMARY     ==========
+
+ SELECT '2017-10-05 0:00:00',
+	 left(MR_AP,2)as building,
+       Count(DISTINCT mr_mac) as device,
+       Count(DISTINCT mr_username) as user
+FROM   cs699.mac_report2
+WHERE  mr_time >= '2017-10-05 0:00:00'
+       AND mr_time < '2017-10-06 0:00:00 '
+       And mr_username != ""
+
+group by building;
+
+
+
+drop table yliu12.BUILDING_SUMMARY;
+commit;
+
+CREATE TABLE yliu12.BUILDING_SUMMARY(
+	RECORD_DATETIME datetime,
+    BUILDING varchar(32),
+    DEVICE_COUNT INT,
+    USER_COUNT INT
+
+);
+commit;
+
+
+INSERT INTO yliu12.BUILDING_SUMMARY (RECORD_DATETIME, BUILDING, DEVICE_COUNT, USER_COUNT)
+
+SELECT '2017-10-05 0:00:00',
+	 left(MR_AP,2)as building,
+       Count(DISTINCT mr_mac) as device,
+       Count(DISTINCT mr_username) as user
+FROM   cs699.mac_report2
+WHERE  mr_time >= '2017-10-05 0:00:00'
+       AND mr_time < '2017-10-06 0:00:00 '
+       And mr_username != ""
+
+group by building;
+
+select * from yliu12.BUILDING_SUMMARY;
+
+#====================     processed_data     ================
+drop TABLE yliu12.processed_data;
+commit;
+
+CREATE TABLE yliu12.Processed_data(
+	RECORD_DATETIME datetime,
+    RECORD_KEY varchar(32),
+    RECORD_VALUE varchar(32)
+
+);
+
+commit;
+
+insert into yliu12.processed_data values('2017-10-05 0:00:00', 'BUILDING_MOST_USER', 'bl');
+insert into yliu12.processed_data values('2017-10-05 0:00:00' ,'BUILDING_MOST_USER_NUMBER', 4322);
+
+
+
+insert into yliu12.processed_data
+select '2017-10-05 0:00:00',"DEVICE_TOTAL", count(DISTINCT mr_mac)
+from   cs699.mac_report2
+;
+
+insert into yliu12.processed_data
+select '2017-10-05 0:00:00',"USER_TOTAL", count(DISTINCT MR_USERNAME)
+from   cs699.mac_report2
+;
+
+insert into yliu12.processed_data
+select '2017-10-05 0:00:00',"CONNECTION_TOTAL", count(*)
+from   cs699.mac_report2
+;
+
+insert into yliu12.processed_data
+select '2017-10-05 0:00:00',"IP_TOTAL", count(DISTINCT MR_IP)
+from   cs699.mac_report2
+;
+
+
+
+select * from yliu12.processed_data;
+
+
+#====================    NO_OF_DEVICE_USED   ===================
+
+
+
+
+
+CREATE TABLE yliu12.NO_OF_DEVICE_USED(
+	RECORD_DATETIME datetime,
+	USER_COUNT INT,
+    DEVICE_RANGE varchar(32)
+);
+commit;
+
+
+
+insert into yliu12.NO_OF_DEVICE_USED
+
+SELECT '2017-10-05 0:00:00', Count(mr_username), (
+         CASE
+                  WHEN t.device_count = '1' THEN "1"
+                  WHEN t.device_count = '2' THEN "2"
+                  WHEN t.device_count = '3' THEN "3"
+                  WHEN t.device_count >3
+                  AND      device_count <6 THEN "4-5"
+                  WHEN t.device_count >5
+                  AND      device_count <11 THEN "5-10"
+                  ELSE '10+'
+         END) AS device_range
+FROM     (
+                  SELECT   mr_username,
+                           Count(DISTINCT mr_mac) AS device_count
+                  FROM     yliu12.not_null_user_only #where mr_username = "swu"
+                  GROUP BY mr_username ) AS t
+GROUP BY device_range;
+
+select * from yliu12.NO_OF_DEVICE_USED;

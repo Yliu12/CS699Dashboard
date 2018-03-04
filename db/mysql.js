@@ -14,13 +14,13 @@ init = (callback) => {
         if (err) throw err;
         console.log("Connected!");
         //connection.query("SELECT * FROM yliu12.hourly_summary1;", function (err, result) {
-            if (err) throw err;
-            console.log("Result: " + JSON.stringify(result, null, 2));
-        });
+        if (err) throw err;
+        //console.log("Result: " + JSON.stringify(result, null, 2));
     });
 
+
     module.exports.conn = connection;
-    callback()
+    callback();
 };
 
 

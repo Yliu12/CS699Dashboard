@@ -130,91 +130,40 @@
         <div class="pull-right"><a title="Customize indicators" class="btn btn-default btn-light md-settings"></a></div>
     </nav>
 </header>
+
+<!-- =================================================================================================================================================== -->
 <div id="global" ng-controller="myDashboardController">
     <div class="container-fluid" ng-init='init()'>
-
-        <!-- Pie Charts here -->
         <div class="row">
-            <div class="col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Pie Chinese</div>
-                    <div class="panel-body">
-                        <div id="d1-c1" style="height:300px"></div>
-                        <button style="text-align: -webkit-center;" type="button" class="btn btn-success"
-                                ng-click="d1c1.transform('bar')">bar
-                        </button>
+            <!-- Pie Charts here -->
+            <div ng-repeat="(key, value) in keyValItems">
+                <div class="col-sm-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">{{key}}</div>
+                        <div class="panel-body">
+                            <h1 class="text-center">{{value}}</h1>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Pie Korean</div>
-                    <div class="panel-body">
-                        <div id="d1-c2" style="height:300px"></div>
-                        <button style="text-align: -webkit-center;" type="button" class="btn btn-success"
-                                ng-click="d1c2.transform('bar')">bar
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Pie Japanese</div>
-                    <div class="panel-body">
-                        <div id="d1-c3" style="height:300px"></div>
-                        <button style="text-align: -webkit-center;" type="button" class="btn btn-success"
-                                ng-click="d1c3.transform('bar')">bar
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Pie Thai</div>
-                    <div class="panel-body">
-                        <div id="d1-c01" style="height:300px"></div>
-                        <button style="text-align: -webkit-center;" type="button" class="btn btn-success"
-                                ng-click="d1c01.transform('bar')">bar
-                        </button>
-                    </div>
-                </div>
-            </div>
+
         </div>
-
-
         <div class="panel panel-default">
-            <div class="panel-heading">Select Cities</div>
+            <div class="panel-heading">Nunber of device owned</div>
             <div class='panel-body'>
                 <div class='selectCityCheckBox' ng-repeat="city in cityList">
-                    <div class="form-check form-check-inline">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
-                                   ng-model="cbCities[city]"> {{city}}
-                        </label>
-                    </div>
+                    <div id="nodeviceused"></div>
                 </div>
-                <button style="text-align: -webkit-center;" type="button" class="btn btn-success" ng-click="pullData()">
-                    Pull Data
-                </button>
             </div>
         </div>
         <div class="panel panel-default">
-            <div class="panel-heading">C3 Bars</div>
+            <div class="panel-heading">Nunber of device owned</div>
 
             <div class="panel-body">
                 <div id="d1-c5" style="height:320px"></div>
             </div>
             <button style="text-align: -webkit-center;" type="button" class="btn btn-success"
                     ng-click="d1c5.transform('spline')">spline
-            </button>
-            <button style="text-align: -webkit-center;" type="button" class="btn btn-success"
-                    ng-click="d1c5.transform('pie')">pie
-            </button>
-            <button style="text-align: -webkit-center;" type="button" class="btn btn-success"
-                    ng-click="d1c5.transform('bar','Cleveland')">bar(Cleveland)
-            </button>
-            <button style="text-align: -webkit-center;" type="button" class="btn btn-success"
-                    ng-click="d1c5.transform('bar')">bar
             </button>
         </div>
         <div class="panel panel-default">
@@ -229,14 +178,7 @@
                     ng-click="d1c4.transform('bar')">bar
             </button>
         </div>
-        <div class="alert alert-info shadowed" role="alert"><i class="fa fa-fw fa-info-circle"></i> C3.js chart library
-            by Masayuki Tanaka (MIT): <a href="http://c3js.org/">http://c3js.org/</a></div>
-        <div class="panel panel-default">
-            <div class="panel-heading">Networks</div>
-            <a href = "https://jsfiddle.net/yliu0922/knknrk6h/7/">Good Network</a>
-            <a href = "https://jsfiddle.net/yliu0922/83oeLpcx/">Bad Network</a>
 
-        </div>
     </div>
     <footer class="cm-footer"><span class="pull-left">Connected as John Smith</span><span class="pull-right">&copy; PAOMEDIA SARL</span>
     </footer>
