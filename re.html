@@ -1,0 +1,47 @@
+<h3>Notes</h3>
+<ul>
+    <li style="list-style-type: none;">
+        <ul>
+            <li>10.196.36.163  tbuslog01.aws.bsu.edu.  VPN needed for off campus access.</li>
+            <li>JDK not JRE!!            <strong>sudo yum install java-1.8.0-openjdk-devel </strong></li>
+            <li>Change Java Version if needed
+                <pre class="lang-java prettyprint prettyprinted"><code><span class="pln">sudo update</span><span
+                        class="pun">-</span><span class="pln">alternatives </span><span class="pun">--</span><span
+                        class="pln">config java </span></code></pre>
+            </li>
+        </ul>
+    </li>
+
+
+    <li><strong>Install Maven</strong>, MVN uses %JAVA_HOME</li>
+    <li><pre>
+                <code><span class="pln">sudo wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
+sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo </span></code>
+                sudo yum install -y apache-maven
+mvn --version</pre>
+        <strong>yum install tomcat8-webapps tomcat8-admin-webapps</strong>
+        <ul>
+            <li>PLEASE GOOGLE if needed
+                <ul>
+                    <li>Tomcat config</li>
+                    <li>Maven Config</li>
+                    <li>Tomcat https settings</li>
+                </ul>
+            </li>
+            <li>Check port usage</li>
+        </ul>
+        sudo netstat -nupt -l
+        <h3>Progress</h3>
+        <ol>
+            <li>Frontend Compiled and running, using lite-server and pm2</li>
+            <li>Backend mvn package success, deploy to Tomcat 405 Error. Authorization issue.  Currently working
+                on it.
+            </li>
+            <li>Open Ports : 80  8080  4200  443.</li>
+            <li><strong>Http deploy & config done </strong></li>
+            <li><strong>Working on https configurations, need 8443 for https.</strong></li>
+        </ol>
+    </li>
+
+
+</ul>

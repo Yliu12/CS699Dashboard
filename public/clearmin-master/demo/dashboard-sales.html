@@ -13,6 +13,9 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
     <!-- app.js -->
     <script src="/assets/js/app.js"></script>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCyN6PJkYNhzf9HRKL_L7t7u9sP7xJWOo&libraries=visualization">
+    </script>
 
     <title>Clearmin template</title>
 </head>
@@ -178,7 +181,12 @@
                     ng-click="d1c4.transform('bar')">bar
             </button>
         </div>
-
+        <div class="panel panel-default" style="height:500px;">
+            <div class="panel-heading">Heat Map, Number of Users</div>
+            <div class="panel-body" >
+                <div id="map" style="height:450px"></div>
+            </div>
+        </div>
     </div>
     <footer class="cm-footer"><span class="pull-left">Connected as John Smith</span><span class="pull-right">&copy; PAOMEDIA SARL</span>
     </footer>

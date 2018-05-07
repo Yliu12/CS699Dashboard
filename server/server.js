@@ -39,11 +39,12 @@ app.get("/keyvals", (req, res) => {
         }
         result = {};
 
+        if (resData) {
+            resData.forEach(function (value, index) {
+                result[value.RECORD_KEY] = value.RECORD_VALUE.toUpperCase();
 
-        resData.forEach(function (value, index) {
-            result[value.RECORD_KEY] = value.RECORD_VALUE.toUpperCase();
-
-        });
+            });
+        }
 
 
         res.status(200);
@@ -92,7 +93,30 @@ app.get("/nodeviceused", (req, res) => {
         result = [];
 
         resData.forEach(function (value, index) {
-            result.push([value.DEVICE_RANGE,value.USER_COUNT]);
+            result.push([value.DEVICE_RANGE, value.USER_COUNT]);
+        });
+
+
+        res.status(200);
+        res.send(result);
+        console.log("Result: " + JSON.stringify(result, null, 2));
+    });
+
+
+});
+app.get("/buildingSummary", (req, res) => {
+
+
+    db.conn.query("select * from yliu12.building_summary;", function (err, resData) {
+        if (err) {
+            res.status(400);
+            res.send(err);
+        }
+        result = [];
+        console.log(resData);
+
+        resData.forEach(function (value, index) {
+            result.push([value.BUILDING, value.USER_COUNT]);
         });
 
 

@@ -5,6 +5,37 @@ app.controller('myDashboardController', myDashboardController);
 
 function myDashboardController($scope, $http) {
 
+    // https://maps.googleapis.com/maps/api/geocode/json?address=BSU%studebaker%20west%20muncie&key=AIzaSyBCyN6PJkYNhzf9HRKL_L7t7u9sP7xJWOo
+    $scope.geoCord = {
+        'rb': {"lat": 40.2044315, "lng": -85.40880919999999},
+        'lb': {"lat": 40.2041683, "lng": -85.4085872},
+        'sc': {
+            "lat": 40.1971133,
+            "lng": -85.4089223
+        },
+        'aj': {
+            "lat": 40.2023042,
+            "lng": -85.40865029999999
+        }, 'bl': {
+            "lat": 40.2025089,
+            "lng": -85.40723
+        }, 'tc': {
+            "lat": 40.2061028,
+            "lng": -85.40698599999999
+        }, 'la': {
+            "lat": 40.2068651,
+            "lng": -85.40913209999999
+        }, 'bb': {
+            "lat": 40.1988438,
+            "lng": -85.4082071
+        }, 'se': {
+            "lat": 40.2033886,
+            "lng": -85.4015543
+        }, 'sw': {
+            "lat": 40.2034718,
+            "lng": -85.4022394
+        }
+    };
 
     $scope.init = function () {
         debugger;
@@ -43,7 +74,7 @@ function myDashboardController($scope, $http) {
         $scope.getKVData();
         $scope.getUDpeiDATA();
 
-
+        $scope.makeMap();
         // $scope.getPieCharData(["Restaurants", "Chinese"], '#d1-c1', 'Chinese Restaurents', $scope.d1c1);
 
 
@@ -88,7 +119,6 @@ function myDashboardController($scope, $http) {
         });
 
     };
-
 
 
     $scope.cbToList = function (cb) {
@@ -251,6 +281,63 @@ function myDashboardController($scope, $http) {
         });
 
     };
+
+    $scope.makeMap = function () {
+
+
+        $http({
+            url: '/buildingSummary',
+            method: "GET"
+        }).success(function (resp) {
+            debugger;
+
+            var heatMapData = [];
+            resp.forEach(function (value, index) {
+
+                if ($scope.geoCord[value[0]]) {
+                    var loc = $scope.geoCord[value[0]];
+                    var WeightedLocation = {
+                        location: new google.maps.LatLng(loc.lat, loc.lng), weight: value[1]
+                    };
+                    heatMapData.push(WeightedLocation);
+                }
+            });
+            var BSU = new google.maps.LatLng(40.2025089, -85.40723);
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: BSU,
+                zoom: 13,
+                mapTypeId: 'satellite'
+            });
+
+            var heatmap = new google.maps.visualization.HeatmapLayer({
+                data: heatMapData
+            });
+            heatmap.setMap(map);
+        }).error(function (data) {
+            debugger;
+            console.log('Error: ' + data);
+        });
+        // var heatMapData = [
+        //     {location: new google.maps.LatLng(37.782, -122.447), weight: 0.5},
+        //     new google.maps.LatLng(37.782, -122.445),
+        //     {location: new google.maps.LatLng(37.782, -122.443), weight: 2},
+        //     {location: new google.maps.LatLng(37.782, -122.441), weight: 3},
+        //     {location: new google.maps.LatLng(37.782, -122.439), weight: 2},
+        //     new google.maps.LatLng(37.782, -122.437),
+        //     {location: new google.maps.LatLng(37.782, -122.435), weight: 0.5},
+        //
+        //     {location: new google.maps.LatLng(37.785, -122.447), weight: 3},
+        //     {location: new google.maps.LatLng(37.785, -122.445), weight: 2},
+        //     new google.maps.LatLng(37.785, -122.443),
+        //     {location: new google.maps.LatLng(37.785, -122.441), weight: 0.5},
+        //     new google.maps.LatLng(37.785, -122.439),
+        //     {location: new google.maps.LatLng(37.785, -122.437), weight: 2},
+        //     {location: new google.maps.LatLng(37.785, -122.435), weight: 3}
+        // ];
+
+    }
+
 
 //localhost:8881/countstarsincities?cites=["Cleveland","Las Vegas","Pittsburgh","Toronto","Charlotte"]
 };

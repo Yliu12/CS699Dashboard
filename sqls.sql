@@ -1,6 +1,9 @@
 select * from cs699.mac_report order by MR_USERNAME desc;
 
 select * from cs699.mac_report2 as init where MR_USERNAME = "swu" 
+
+select * from cs699.mac_report2 where MR_Ap like "10%"
+
  
 GROUP BY MR_MAC 
 ORDER BY Magnitude;
